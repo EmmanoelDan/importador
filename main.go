@@ -10,14 +10,6 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-// const (
-// 	dbUser = "postgres"
-// 	dbPass = "root"
-// 	dbName = "db_import"
-// 	dbHost = "localhost"
-// 	dbPort = "5432"
-// )
 func main() {
 	dsn := "host=localhost user=postgres password=root dbname=db_import port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -26,9 +18,14 @@ func main() {
 	}
 
 	partnerRepo := &repository.PartnerRepository{DB: db}
-
+	customerRepo := &repository.CustomerRepository{DB: db}
+	productRepo := &repository.ProductRepository{DB: db}
 	importService := &service.ImportService{
+		DB: db,
 		PartnerRepo: partnerRepo,
+		CustomerRepo: customerRepo,
+        ProductRepo: productRepo,
+		
 	}
 
 	if err := importService.ImportCSV("Reconfile-fornecedores.csv"); err != nil {
