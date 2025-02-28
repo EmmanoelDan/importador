@@ -1,51 +1,40 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/csv"
 	"fmt"
 	"log"
-	"os"
 
+	"github.com/EmmanoelDan/importador/repository"
+	"github.com/EmmanoelDan/importador/service"
 	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-const (
-	dbUser = "postgres"
-	dbPass = "root"
-	dbName = "db_import"
-	dbHost = "localhost"
-	dbPort = "5432"
-)
+// const (
+// 	dbUser = "postgres"
+// 	dbPass = "root"
+// 	dbName = "db_import"
+// 	dbHost = "localhost"
+// 	dbPort = "5432"
+// )
 func main() {
-	connStr := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
-		dbUser, dbPass, dbName, dbHost, dbPort)
-	
-	db, err := sql.Open("postgres", connStr)
-	
+	dsn := "host=localhost user=postgres password=root dbname=db_import port=5432 sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error connecting to database: ", err)
 	}
-	defer db.Close()
-	
-	fmt.Println("Connecting to database successfully")
 
-	file, err := os.Open("Reconfile-fornecedores.csv")
-	if err != nil {
-        log.Fatal("Error open CSV file: ", err)
-    }
-	defer file.Close()
+	partnerRepo := &repository.PartnerRepository{DB: db}
 
-	reader := csv.NewReader(file)
-
-	records, err := reader.ReadAll()
-
-	if err != nil {
-        log.Fatal("Error reading CSV file: ", err)
-    }
-
-	for _, row := range records {
-		fmt.Println(row)
+	importService := &service.ImportService{
+		PartnerRepo: partnerRepo,
 	}
+
+	if err := importService.ImportCSV("Reconfile-fornecedores.csv"); err != nil {
+		log.Fatal("Error importing CSV: ", err)
+	}
+
+	fmt.Println("CSV data imported successfully!")
 
 }
