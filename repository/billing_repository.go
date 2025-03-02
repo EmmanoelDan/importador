@@ -5,10 +5,10 @@ import (
 	"gorm.io/gorm"
 )
 
-type Billing struct {
+type BillingRepository struct {
 	DB *gorm.DB
 }
 
-func (repo *Billing) Create(billing *model.Billing) error {
-    return repo.DB.Create(billing).Error
+func (repo *BillingRepository) Create(billing *model.Billing) error {
+	return repo.DB.Create(billing).Error
 }
