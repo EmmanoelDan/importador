@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/EmmanoelDan/importador/controller"
+	"github.com/EmmanoelDan/importador/middleware"
 	"github.com/EmmanoelDan/importador/repository"
 	"github.com/EmmanoelDan/importador/service"
 	"github.com/gin-gonic/gin"
@@ -50,17 +51,14 @@ func initializeRouter(r *gin.Engine) {
 	userRegisterController := controller.NewUserHandler(userRegisterService)
 	authUserService := service.NewAuthService(*userRepo)
 	authController := controller.NewAuthHandler(authUserService)
-	v1 := r.Group("/api/v1")
+	r.POST("/sign", authController.Sign)
+	r.POST("/register", userRegisterController.Register)
+
+	protected := r.Group("/")
+	protected.Use(middleware.AuthMiddleware())
 
 	{
-		v1.POST("/import_file", importController.UploadCSVHandler)
-		v1.GET("/customer")
-		v1.GET("/partner")
-		v1.GET("/product")
-		v1.GET("/sku")
-		v1.GET("/entitlement")
-		v1.GET("/billing")
-		v1.POST("/register", userRegisterController.Register)
-		v1.POST("/sign", authController.Sign)
+		protected.POST("/import_file", importController.UploadCSVHandler)
+		protected.GET("/billings")
 	}
 }

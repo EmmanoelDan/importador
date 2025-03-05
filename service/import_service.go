@@ -28,7 +28,7 @@ type ImportService struct {
 
 const (
 	workerPoolSize = 6
-	batchSize      = 20
+	batchSize      = 120
 )
 
 func (s *ImportService) ImportCSV(filename string) error {
