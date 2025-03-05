@@ -100,10 +100,11 @@ OBS: POST Register -> POST Sign -> POST Import Files -> GET Bellings
 }
 </pre>
 
-- **URL:** `/billings`
+- **URL:** `/billings?page=1&pageSize=10`
 - **Método:** `GET`
 - **Tipo de Conteúdo:** `multipart/form-data`
 - **Autenticação:** Bearer Token (JWT)
+- **Params** pagination: page e pageSize. 
 
 
 
