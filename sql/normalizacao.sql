@@ -53,7 +53,7 @@ CREATE TABLE Entitlements (
 );
 
 CREATE TABLE Billings (
-    BillingId SERIAL PRIMARY KEY, -- Correção: SERIAL para auto incremento
+    BillingId SERIAL PRIMARY KEY, 
     CustomerId TEXT,
     ProductId text,
     EntitlementId TEXT,
@@ -83,7 +83,7 @@ CREATE TABLE Billings (
     ServiceInfo1 TEXT,
     ServiceInfo2 TEXT,
     Tags JSON,
-    AdditionalInfo JSON, -- Correção: JSON em vez de JSOB
+    AdditionalInfo JSON,
     EffectiveUnitPrice DECIMAL(18, 6),
     PCToBCExchangeRate DECIMAL(18, 6),
     PCToBCExchangeRateDate DATE,

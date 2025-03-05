@@ -38,12 +38,67 @@ JWT_SECRET=seu_segredo_super_secreto
 ```sh
 go run main.go
 ```
-    a api esta disponivel em:
+
 ```sh
     http://localhost:8080
 ```
 
 📌 Endpoints
+
+- **URL:** `/login`
+- **Método:** `POST`
+
+Body:
+
+<pre>
+{
+  "username": "admin",
+  "password": "123456"
+}
+</pre>
+
+Resposta (200 OK):
+
+<pre>
+{
+  token": "jwt_token_aqui"
+}
+</pre>
+
+- **URL:** `/register`
+- **Método:** `POST`
+
+Body:
+
+<pre>
+{
+  "username": "admin",
+  "password": "123456"
+}
+</pre>
+
+Resposta (201 created):
+
+<pre>
+{
+    "message": "Create user successfully",
+    "user": "admin"
+}
+</pre>
+
+- **URL:** `/import_file`
+- **Método:** `POST`
+- **Tipo de Conteúdo:** `multipart/form-data`
+- **Autenticação:** Bearer Token (JWT)
+
+{
+    "message": "Upload successfully imported"
+}
+
+- **URL:** `/billings`
+- **Método:** `GET`
+- **Tipo de Conteúdo:** `multipart/form-data`
+- **Autenticação:** Bearer Token (JWT)
 
 
 

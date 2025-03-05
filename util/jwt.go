@@ -1,12 +1,13 @@
 package util
 
 import (
+	"log"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 )
-
-var jwtKey = []byte("jwt-key")
 
 type Claims struct {
 	Username string `json:"username"`
@@ -14,6 +15,14 @@ type Claims struct {
 }
 
 func GenerateJWT(username string) (string, error) {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Erro ao carregar o arquivo .env: %v", err)
+	}
+
+	var jwtKey = []byte(os.Getenv("JWT_KEY"))
+
 	expirationTime := time.Now().Add(1 * time.Hour)
 
 	claims := &Claims{
@@ -34,6 +43,13 @@ func GenerateJWT(username string) (string, error) {
 }
 
 func ValidateJWT(tokenString string) (*Claims, error) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Erro ao carregar o arquivo .env: %v", err)
+	}
+
+	var jwtKey = []byte(os.Getenv("JWT_KEY"))
+
 	claims := &Claims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
