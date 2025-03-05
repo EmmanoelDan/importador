@@ -2,7 +2,7 @@
 
 # Introdução
 
-Ao decidir a arquitetura para este projeto Go, optei por seguir os princípios da Clean Architecture, organizando o código em camadas bem definidas para garantir modularidade, escalabilidade e facilidade de manutenção. Essa abordagem facilita a testabilidade e promove um código desacoplado.
+Ao decidir a arquitetura para este projeto Go, optei por seguir os princípios da Clean Architecture, mas seguindo com um projeto mais simples e objetivo. 
 
 # Estrutura do Projeto
 
@@ -58,7 +58,7 @@ O projeto está organizado nas seguintes pastas:
 
 1. Controller (Interface Adapters)
 
-- Responsável por lidar com as requisições HTTP, chamando os serviços adequados e formatando as respostas. Utiliza frameworks como Gin ou Fiber para gerenciar rotas.
+- Responsável por lidar com as requisições HTTP, chamando os serviços adequados e formatando as respostas. Utilizei framework Gin.
 
 2. Service (Use Cases)
 
@@ -66,7 +66,7 @@ O projeto está organizado nas seguintes pastas:
 
 3. Repository (Data Layer)
 
-- Faz a interação com o banco de dados ou outras fontes de dados externas. Pode utilizar GORM ou sqlx para facilitar a manipulação de dados.
+- Faz a interação com o banco de dados ou outras fontes de dados externas. Utilizei GORM para facilitar a manipulação de dados.
 
 4. Model (Entities)
 
