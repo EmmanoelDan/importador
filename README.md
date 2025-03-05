@@ -1,7 +1,7 @@
 # Importador API 🗂️
 
 ## 📌 Sobre  
-A **Importador API** permite o upload e processamento de arquivos, além de autenticação de usuários via **JWT**. Seu objetivo é facilitar a importação e gerenciamento de dados com performance, eficiência e segurança. 
+A **Importador API** permite o upload e processamento de arquivos, além de autenticação de usuários via **JWT**. Seu objetivo é facilitar a importação e gerenciamento de dados com performance, eficiência e segurança.
 
 ## 🚀 Tecnologias  
 - **Golang** (Gin, GORM)  
@@ -24,10 +24,10 @@ go mod tidy
 
 3️⃣ Configure o arquivo .env com as variáveis de ambiente:
 ```sh
-PORT=8080
+DB_PORT=8080
 DB_HOST=localhost
 DB_USER=seu_usuario
-DB_PASS=sua_senha
+DB_PASSWORD=sua_senha
 DB_NAME=importador
 JWT_SECRET=seu_segredo_super_secreto
 ```
@@ -45,26 +45,7 @@ go run main.go
 
 ## 📌 Endpoints
 
-- **URL:** `/login`
-- **Método:** `POST`
-
-### Body:
-
-<pre>
-
-{
-  "username": "admin",
-  "password": "123456"
-}
-</pre>
-
-### Resposta (200 OK):
-
-<pre>
-{
-  token": "jwt_token_aqui"
-}
-</pre>
+OBS: POST Register -> POST Sign -> POST Import Files -> GET Bellings
 
 - **URL:** `/register`
 - **Método:** `POST`
@@ -87,6 +68,28 @@ go run main.go
 }
 </pre>
 
+- **URL:** `/login`
+- **Método:** `POST`
+
+### Body:
+
+<pre>
+
+{
+  "username": "admin",
+  "password": "123456"
+}
+</pre>
+
+### Resposta (200 OK):
+
+<pre>
+{
+  token": "jwt_token_aqui"
+}
+</pre>
+
+
 - **URL:** `/import_file`
 - **Método:** `POST`
 - **Tipo de Conteúdo:** `multipart/form-data`
@@ -101,6 +104,8 @@ go run main.go
 - **Método:** `GET`
 - **Tipo de Conteúdo:** `multipart/form-data`
 - **Autenticação:** Bearer Token (JWT)
+
+
 
 📄 Licença
 
