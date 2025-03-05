@@ -1,4 +1,10 @@
 
+create table users (
+	UserId SERIAL primary key,
+	username text,
+	password text
+);
+
 CREATE TABLE Partners (
     PartnerId TEXT PRIMARY KEY,
     PartnerName TEXT,
@@ -12,25 +18,26 @@ CREATE TABLE Customers (
     CustomerDomainName TEXT,
     CustomerCountry TEXT,
     PartnerId TEXT,
-    CONSTRAINT fk_partner FOREIGN KEY (PartnerId) REFERENCES Partners(PartnerId)
-);
-
-CREATE TABLE Products (
-    ProductId TEXT PRIMARY KEY,
-    ProductName TEXT,    
-    PublisherId TEXT,
-    PublisherName TEXT,
-    SubscriptionId TEXT,
-    SubscriptionDescription TEXT
-    
+    FOREIGN KEY (PartnerId) REFERENCES Partners(PartnerId)
 );
 
 CREATE TABLE Skus (
     SkuId TEXT PRIMARY KEY,
-    ProductId TEXT,
     SkuName TEXT,
-    AvailabilityId TEXT,
-    FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
+    AvailabilityId TEXT
+);
+
+CREATE TABLE Products (
+    ProductId TEXT PRIMARY KEY,
+    SkuId TEXT,
+    ProductName TEXT,    
+    PublisherId TEXT,
+    PublisherName TEXT,
+    SubscriptionId TEXT,
+    SubscriptionDescription text,
+    
+    FOREIGN KEY (SkuId) REFERENCES Skus(SkuId)
+    
 );
 
 
@@ -47,7 +54,8 @@ CREATE TABLE Entitlements (
 
 CREATE TABLE Billings (
     BillingId SERIAL PRIMARY KEY, -- Correção: SERIAL para auto incremento
-    PartnerId TEXT,
+    CustomerId TEXT,
+    ProductId text,
     EntitlementId TEXT,
     InvoiceNumber TEXT,
     ChargeStartDate DATE,
@@ -79,6 +87,7 @@ CREATE TABLE Billings (
     EffectiveUnitPrice DECIMAL(18, 6),
     PCToBCExchangeRate DECIMAL(18, 6),
     PCToBCExchangeRateDate DATE,
-    FOREIGN KEY (PartnerId) REFERENCES Partners(PartnerId),
+    FOREIGN KEY (CustomerId) REFERENCES Customers(CustomerId),
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId),
     FOREIGN KEY (EntitlementId) REFERENCES Entitlements(EntitlementId)
 );

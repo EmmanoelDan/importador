@@ -8,7 +8,8 @@ import (
 
 type Billing struct {
 	BillingId              string         `gorm:"primaryKey;column:billingid;autoIncrement"`
-	PartnerId              string         `gorm:"column:partnerid"`
+	CustomerId             string         `gorm:"column:customerid"`
+	ProductId              string         `gorm:"column:productid"`
 	EntitlementId          string         `gorm:"column:entitlementid"`
 	InvoiceNumber          string         `gorm:"column:invoicenumber"`
 	ChargeStartDate        time.Time      `gorm:"column:chargestartdate;type:date"`
@@ -40,4 +41,8 @@ type Billing struct {
 	EffectiveUnitPrice     float64        `gorm:"column:effectiveunitprice"`
 	PCToBCExchangeRate     float64        `gorm:"column:pctobcexchangerate"`
 	PCToBCExchangeRateDate time.Time      `gorm:"column:pctobcexchangeratedate;type:date"`
+
+	Customer    Customer    `gorm:"foreignKey:CustomerId;references:CustomerId"`
+	Product     Product     `gorm:"foreignKey:ProductId;references:ProductId"`
+	Entitlement Entitlement `gorm:"foreignKey:EntitlementId;references:EntitlementId"`
 }

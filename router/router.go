@@ -51,6 +51,9 @@ func initializeRouter(r *gin.Engine) {
 	userRegisterController := controller.NewUserHandler(userRegisterService)
 	authUserService := service.NewAuthService(*userRepo)
 	authController := controller.NewAuthHandler(authUserService)
+	billingService := service.NewBillingService(billingRepo)
+	billingController := controller.NewBillingController(billingService)
+
 	r.POST("/sign", authController.Sign)
 	r.POST("/register", userRegisterController.Register)
 
@@ -59,6 +62,6 @@ func initializeRouter(r *gin.Engine) {
 
 	{
 		protected.POST("/import_file", importController.UploadCSVHandler)
-		protected.GET("/billings")
+		protected.GET("/billings", billingController.FindAllWithRelations)
 	}
 }

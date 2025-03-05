@@ -28,7 +28,7 @@ type ImportService struct {
 
 const (
 	workerPoolSize = 6
-	batchSize      = 120
+	batchSize      = 100
 )
 
 func (s *ImportService) ImportCSV(filename string) error {
@@ -101,20 +101,20 @@ func (s *ImportService) processBatch(rowChan <-chan map[string]string) {
 			PartnerId:          partners[len(partners)-1].PartnerId,
 		})
 
+		skus = append(skus, model.Sku{
+			SkuId:          rowMap["SkuId"],
+			SkuName:        rowMap["SkuName"],
+			AvailabilityId: rowMap["AvailabilityId"],
+		})
+
 		products = append(products, model.Product{
 			ProductId:               rowMap["ProductId"],
+			SkuId:                   skus[len(skus)-1].SkuId,
 			ProductName:             rowMap["ProductName"],
 			PublisherName:           rowMap["PublisherName"],
 			PublisherId:             rowMap["PublisherId"],
 			SubscriptionId:          rowMap["SubscriptionId"],
 			SubscriptionDescription: rowMap["SubscriptionDescription"],
-		})
-
-		skus = append(skus, model.Sku{
-			ProductId:      products[len(products)-1].ProductId,
-			SkuId:          rowMap["SkuId"],
-			SkuName:        rowMap["SkuName"],
-			AvailabilityId: rowMap["AvailabilityId"],
 		})
 
 		partnerEarnedCreditPercentage, err := strconv.ParseFloat(rowMap["PartnerEarnedCreditPercentage"], 64)
@@ -183,7 +183,8 @@ func (s *ImportService) processBatch(rowChan <-chan map[string]string) {
 		}
 
 		billings = append(billings, model.Billing{
-			PartnerId:              partners[len(partners)-1].PartnerId,
+			CustomerId:             customers[len(customers)-1].CustomerId,
+			ProductId:              products[len(products)-1].ProductId,
 			EntitlementId:          entitlements[len(entitlements)-1].EntitlementId,
 			InvoiceNumber:          rowMap["InvoiceNumber"],
 			ChargeStartDate:        chargeStartDate,
@@ -218,22 +219,22 @@ func (s *ImportService) processBatch(rowChan <-chan map[string]string) {
 		})
 
 		if len(partners) >= batchSize {
-			s.insertBatch(partners, customers, products, skus, entitlements, billings)
+			s.insertBatch(partners, customers, skus, products, entitlements, billings)
 			partners = nil
 			customers = nil
-			products = nil
 			skus = nil
+			products = nil
 			entitlements = nil
 			billings = nil
 		}
 	}
 
 	if len(partners) > 0 {
-		s.insertBatch(partners, customers, products, skus, entitlements, billings)
+		s.insertBatch(partners, customers, skus, products, entitlements, billings)
 	}
 }
 
-func (s *ImportService) insertBatch(partners []model.Partner, customers []model.Customer, products []model.Product, skus []model.Sku, entitlements []model.Entitlement, billings []model.Billing) {
+func (s *ImportService) insertBatch(partners []model.Partner, customers []model.Customer, skus []model.Sku, products []model.Product, entitlements []model.Entitlement, billings []model.Billing) {
 	tx := s.DB.Begin()
 
 	defer func() {
@@ -262,19 +263,19 @@ func (s *ImportService) insertBatch(partners []model.Partner, customers []model.
 	}
 
 	if err := tx.Clauses(clause.OnConflict{Columns: []clause.Column{{
-		Name: "productid"}},
+		Name: "skuid"}},
 		DoNothing: true,
-	}).Create(&products).Error; err != nil {
-		log.Printf("Erro ao inserir batch de products: %v", err)
+	}).Create(&skus).Error; err != nil {
+		log.Printf("Erro ao inserir batch de skus: %v", err)
 		tx.Rollback()
 		return
 	}
 
 	if err := tx.Clauses(clause.OnConflict{Columns: []clause.Column{{
-		Name: "skuid"}},
+		Name: "productid"}},
 		DoNothing: true,
-	}).Create(&skus).Error; err != nil {
-		log.Printf("Erro ao inserir batch de skus: %v", err)
+	}).Create(&products).Error; err != nil {
+		log.Printf("Erro ao inserir batch de products: %v", err)
 		tx.Rollback()
 		return
 	}
