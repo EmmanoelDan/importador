@@ -33,6 +33,8 @@ func initializeRouter(r *gin.Engine) {
 	entitlementRepo := &repository.EntitlementRepository{DB: db}
 	billingRepo := &repository.BillingRepository{DB: db}
 
+	userRepo := &repository.UserRepository{DB: db}
+
 	importService := &service.ImportService{
 		DB:              db,
 		PartnerRepo:     partnerRepo,
@@ -44,7 +46,10 @@ func initializeRouter(r *gin.Engine) {
 	}
 
 	importController := controller.NewImportController(importService)
-
+	userRegisterService := service.NewCreateUserService(userRepo)
+	userRegisterController := controller.NewUserHandler(userRegisterService)
+	authUserService := service.NewAuthService(*userRepo)
+	authController := controller.NewAuthHandler(authUserService)
 	v1 := r.Group("/api/v1")
 
 	{
@@ -55,5 +60,7 @@ func initializeRouter(r *gin.Engine) {
 		v1.GET("/sku")
 		v1.GET("/entitlement")
 		v1.GET("/billing")
+		v1.POST("/register", userRegisterController.Register)
+		v1.POST("/sign", authController.Sign)
 	}
 }
