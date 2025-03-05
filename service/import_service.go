@@ -28,7 +28,7 @@ type ImportService struct {
 
 const (
 	workerPoolSize = 6
-	batchSize      = 50
+	batchSize      = 20
 )
 
 func (s *ImportService) ImportCSV(filename string) error {
@@ -84,10 +84,6 @@ func (s *ImportService) processBatch(rowChan <-chan map[string]string) {
 	var skus []model.Sku
 	var entitlements []model.Entitlement
 	var billings []model.Billing
-	/* 	var meters []model.Meter
-	 */
-	/*var entitlements []model.Entitlement
-	var billings []model.Billing */
 
 	for rowMap := range rowChan {
 		partners = append(partners, model.Partner{
@@ -121,15 +117,6 @@ func (s *ImportService) processBatch(rowChan <-chan map[string]string) {
 			AvailabilityId: rowMap["AvailabilityId"],
 		})
 
-		/* meters = append(meters, model.Meter{
-			MeterId:          rowMap["MeterId"],
-			MeterType:        rowMap["MeterType"],
-			MeterCategory:    rowMap["MeterCategory"],
-			MeterSubCategory: rowMap["MeterSubCategory"],
-			MeterName:        rowMap["MeterName"],
-			MeterRegion:      rowMap["MeterRegion"],
-			Unit:             rowMap["Unit"],
-		}) */
 		partnerEarnedCreditPercentage, err := strconv.ParseFloat(rowMap["PartnerEarnedCreditPercentage"], 64)
 		if err != nil {
 			log.Fatal("Error parsing PartnerEarnedCreditPercentage:", err)
