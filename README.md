@@ -45,9 +45,11 @@ obs: certifique-se de que o docker esteja funcionando corretamente em sua maquin
 docker-compose up --build -d
 ```
 
-```sh
-    http://localhost:8080
-```
+Dessa forma seu container estara rodando com o servico de banco e a api.
+
+Para testar se esta funcionando pode seguir a documentacao do postman em:
+https://eg5555.postman.co/workspace/EG-Workspace~d857a333-6822-49a1-92e4-e7c0096f01b1/collection/20154775-16d39a48-fd68-4f7d-9ee0-3337c4105244?action=share&creator=20154775 ou
+https://documenter.getpostman.com/view/20154775/2sAYkBrgBA
 
 ## 📌 Endpoints
 
