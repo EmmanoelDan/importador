@@ -1,5 +1,7 @@
 
-create table users (
+CREATE DATABASE public;
+
+CREATE TABLE Users (
 	UserId SERIAL primary key,
 	username text,
 	password text

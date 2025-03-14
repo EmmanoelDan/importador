@@ -1,7 +1,9 @@
 package router
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/EmmanoelDan/importador/controller"
 	"github.com/EmmanoelDan/importador/middleware"
@@ -14,14 +16,23 @@ import (
 
 func Init() {
 	r := gin.Default()
-
 	initializeRouter(r)
 
-	r.Run()
+	port := ":8080"
+	log.Printf("Server is listening on port %s", port)
+
+	r.Run(port)
 }
 
 func initializeRouter(r *gin.Engine) {
-	dsn := "host=localhost user=postgres password=root dbname=postgres port=5432 sslmode=disable"
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PORT"),
+	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error connecting to database: ", err)

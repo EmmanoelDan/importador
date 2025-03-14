@@ -15,7 +15,4 @@ func main() {
 	}
 
 	router.Init()
-	port := "8080"
-	log.Printf("Server is listening on port %s", port)
-
 }

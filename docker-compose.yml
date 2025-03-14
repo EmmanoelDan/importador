@@ -1,33 +1,38 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  db:
-    image: postgres:15
-    container_name: postgres_container
-    restart: always
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   app:
-    build: .
-    container_name: import_csv
+    image: golang:latest
+    container_name: import_app
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
     depends_on:
       - db
     environment:
       DB_HOST: db
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: postgres
-      DB_PORT: 5432
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: root
+      DB_NAME: importador_db
+      JWT_KEY: 12345
+      DB_SSLMODE: disable
+    command: go run main.go
+
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: importador_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
     ports:
-      - "8080:8080"
-    command: ["./app"]
+      - "5432:5432"
 
 volumes:
-  pgdata:
+  postgres_data:
