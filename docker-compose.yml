@@ -13,11 +13,11 @@ services:
       - db
     environment:
       DB_HOST: db
-      DB_PORT: "5432"
-      DB_USER: postgres
-      DB_PASSWORD: root
-      DB_NAME: importador_db
-      JWT_KEY: 12345
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_KEY: ${JWT_SECRET}
       DB_SSLMODE: disable
     command: go run main.go
 
@@ -25,14 +25,14 @@ services:
     image: postgres:13
     container_name: postgres_db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: importador_db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
 
 volumes:
   postgres_data:

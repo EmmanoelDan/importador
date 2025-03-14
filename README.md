@@ -1,42 +1,48 @@
 # Importador API 🗂️
 
-## 📌 Sobre  
+## 📌 Sobre
+
 A **Importador API** permite o upload e processamento de arquivos, além de autenticação de usuários via **JWT**. Seu objetivo é facilitar a importação e gerenciamento de dados com performance, eficiência e segurança.
 
-## 🚀 Tecnologias  
-- **Golang** (Gin, GORM)  
-- **PostgreSQL/MySQL**  
-- **JWT** para autenticação  
+## 🚀 Tecnologias
+
+- **Golang** (Gin, GORM)
+- **PostgreSQL/MySQL**
+- **Docker**
+- **JWT** para autenticação
 - **GODOTENV** para variaveis de ambiente
 
-## 📜 Instalação  
+## 📜 Instalação
 
-1️⃣ Clone o repositório:  
+1️⃣ Clone o repositório:
+
 ```sh
 git clone https://github.com/seu-usuario/importador.git
 cd importador
 ```
 
 2️⃣ Instale as dependências:
+
 ```sh
 go mod tidy
 ```
 
 3️⃣ Configure o arquivo .env com as variáveis de ambiente:
+
 ```sh
-DB_PORT=8080
-DB_HOST=localhost
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
-DB_NAME=importador
-JWT_SECRET=seu_segredo_super_secreto
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+JWT_KEY=
 ```
 
-4️⃣ Gere as tabelas do banco, com o script na pasta **./sql** arquivo **normalizacao.sql**
+5️⃣ Execute o docker-compose.yml:
 
-5️⃣  Execute o servidor:
+obs: certifique-se de que o docker esteja funcionando corretamente em sua maquina
+
 ```sh
-go run main.go
+docker-compose up --build -d
 ```
 
 ```sh
@@ -89,7 +95,6 @@ OBS: POST Register -> POST Sign -> POST Import Files -> GET Bellings
 }
 </pre>
 
-
 - **URL:** `/import_file`
 - **Método:** `POST`
 - **Tipo de Conteúdo:** `multipart/form-data`
@@ -104,7 +109,7 @@ OBS: POST Register -> POST Sign -> POST Import Files -> GET Bellings
 - **Método:** `GET`
 - **Tipo de Conteúdo:** `multipart/form-data`
 - **Autenticação:** Bearer Token (JWT)
-- **Params** pagination: page e pageSize. 
+- **Params** pagination: page e pageSize.
 
 <pre>
 {
@@ -190,14 +195,6 @@ OBS: POST Register -> POST Sign -> POST Import Files -> GET Bellings
 
 </pre>
 
-
-
 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-
-
-
-
-
